@@ -1,0 +1,302 @@
+<html>
+<head>
+  <title>Spacecraft Builder</title>
+  <link rel="stylesheet" href="spacebuildstyle.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+
+<body>
+
+<div class="title">
+<h1> ON-ORBIT SPACECRAFT DESIGN SIMULATOR <h1>
+  <p style="font-size:16px; font-weight:normal;">The purpose of this simulator is to capture the change in crew performance during on-orbit long-duration space missions and provide a final status of crewmember well-being at the specified mission destination.</p>
+</div>
+
+<div class="mainContainer">
+
+  <div class="containerForm">
+    <form name="myform" action="" method="get"> Spacecraft Name: <br>
+      <input type="text" name="inputbox1" value="" placeholder="Type a name here"><p>
+      <input type="button" name="button1" value="Say It Out Loud.." onClick="readText(this.form)">
+      <br>
+
+      <br> Spacecraft Destination: <br>
+      <select name="destination" id="destination">
+        <option selected disabled hidden style='display: none' value='' placeholder="Select Destination"></option>
+        <option value="Low Earth Orbit (LEO)">Low Earth Orbit (LEO)</option>
+        <option value="Moon">Moon</option>
+        <option value="Mars">Mars</option>
+      </select>
+      <!-- <input id="destination" type=text name="destination" size =20> -->
+      <br>
+
+      <br> Spacecraft Duration On-Orbit: <br>
+      <input id="duration" type=text name="duration" size=10 placeholder="max value of 2000"> days
+      <br>
+
+      <br> # of Crewmembers: <br>
+      <input id="numberOfCrew" type="text" name="inputbox2" value="" placeholder="max value of 20">
+      <br>
+
+      <br> Spacecraft Geometry: <br>
+      <select name="nodeGeometry" id="nodeGeometry">
+        <option selected disabled hidden style='display: none' value='' placeholder="Select Geometry"></option>
+        <option value="Cylindrical">Cylindrical</option>
+        <option value="Capsule">Capsule</option>
+        <option value="Winged">Winged</option>
+      </select>
+      <br>
+
+      <br> # of Spacecraft Nodes: <br>
+      <input type="text" name="inputbox3" value="" placeholder="max value of 6">
+      <br>
+
+      <br> Level of Redundancy: <br>
+      <input type="text" name="inputbox4" value="" placeholder="Type a number 1-10">
+      <br>
+
+      <br> Select a mission type:<br>
+      <input type="radio" name="missionType" id="exploration" value="Exploration" onClick=0>
+      Exploration <br>
+      <input type="radio" name="missionType" id="habitation" value="Habitation" onClick=0>
+      Habitation <br>
+      <input type="radio" name="missionType" id="tourism" value="Tourism" onClick=0>
+      Tourism <br>
+      <br><br>
+      <input type=reset name=reset value="Reset">
+      <input type="button" name="button2" value="Design My Spacecraft!" onClick="createSC(this.form)">
+      </form>
+  </div>
+
+  <div class="container2">
+    <div class="container3">
+      <div class="flex-item stretch" id="titleBox"> Spacecraft Summary
+        <p class="summaryInfo" id="totalO2"></p>
+        <p class="summaryInfo" id="totalCO2"></p>
+        <p class="summaryInfo" id="totalFood"></p>
+        <p class="summaryInfo" id="numCrew"></p>
+      </div>
+      <div class="flex-item stretch" id="objectivesBox"> Mission Objectives: --
+        <p class="summaryInfo" id="missionObjectives"></p>
+      </div>
+      <div class="flex-item stretch" id="destinationBox"> Destination: --
+        <p class="summaryInfo" id="destinationInfo"></p>
+      </div>
+      <div class="flex-item stretch" id="durationBox"> Duration: --
+        <p class="summaryInfo" id="durationInfo"></p>
+      </div>
+    </div>
+
+    <div class="container4">
+      <div class="flex-item stretch" id="spacecraftBox"> Spacecraft Layout
+        <div id="spacecraftImage"></div>
+      </div>
+      <div class="flex-item stretch" id="crewBox"> Crewmember Status
+      </div>
+    </div>
+
+    <div class="container5"> Mission Timeline
+      <canvas id="myChart" height="100px" width:="100px"></canvas>
+      <div id="timeline1">
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div>
+<a href="index.html">BACK</a>
+</div>
+
+<div id="testDiv">
+</div>
+
+<script>
+// var x = [0, 0, 0, 0];
+// //var y = [0, 0, 0, 0];
+//
+// i = 0;
+// while (i<4) {
+//
+//   x[i]=i+1;
+//   // y[i]=i+5;
+//   i++
+// }
+
+function createSC(form) {
+
+var destination = document.getElementById('destination').value;
+document.getElementById("destinationInfo").innerHTML = destination;
+
+var missionType = $("input[name=missionType]:checked").val();
+document.getElementById("missionObjectives").innerHTML = missionType;
+
+var duration = document.getElementById('duration').value;
+document.getElementById("durationInfo").innerHTML = duration + " days";
+
+var numCrew = document.getElementById('numberOfCrew').value;
+document.getElementById('totalO2').innerHTML = "Total O2: " + parseInt(duration)*parseInt(numCrew)*0.84 + " kg";
+document.getElementById('totalCO2').innerHTML = "Total CO2: " + parseInt(duration)*parseInt(numCrew)*1 + " kg";
+document.getElementById('totalFood').innerHTML = "Total Food: " + parseInt(duration)*parseInt(numCrew)*0.62 + " kg";
+
+var nodeGeo = document.getElementById('nodeGeometry').value;
+console.log(nodeGeo);
+if (nodeGeo == "Cylindrical") {
+document.getElementById('spacecraftImage').innerHTML ="<img src='habitatCylinder.jpg' />";
+} else if (nodeGeo == "Capsule") {
+  document.getElementById('spacecraftBox').innerHTML = "<img src='habitatCapsule.png' />";
+} else {
+  document.getElementById('spacecraftBox').innerHTML = "<img src='habitatWinged.jpg' />";
+}
+
+var trace1={
+x:[1, 2, 3, 4],
+y:[form.inputbox1.value, form.inputbox2.value, form.inputbox3.value, form.inputbox4.value],
+  type: 'scatter',
+  name: 'Bone Mass (g)'
+};
+
+var trace2= {
+  x: [1, 2, 3, 4],
+  y: [16, 5, 11, 9],
+  type: 'scatter',
+  name: 'Cardiac Output (ml/min)'
+};
+
+var crewlayout1 = {
+  title: 'Physiological Capability Changes',
+  xaxis: {
+    title: 'Mission Elapsed Time (hrs)'
+  },
+  yaxis: {
+    title: '% to Baseline',
+  },
+  autosize: true,
+  legend: {
+    x: 0.5,
+    y: 1.2
+  },
+   margin: {
+     l: 70,
+     r: 70,
+     b: 70,
+     t: 70,
+     pad: 4
+  },
+  paper_bgcolor: '#7f7f7f',
+  plot_bgcolor: 'white',
+};
+
+var data =[trace1, trace2];
+Plotly.newPlot(id="crewBox", data, crewlayout1);
+
+//THIS HERE USES D3JS.org
+// var testData = [
+//   {label: "person a", times: [
+//          {"starting_time": 1355752800000, "ending_time": 1355759900000},
+//          {"starting_time": 1355767900000, "ending_time": 1355774400000}]},
+//      {label: "person b", times: [
+//          {"starting_time": 1355759910000, "ending_time": 1355761900000}]},
+//      {label: "person c", times: [
+//          {"starting_time": 1355761910000, "ending_time": 1355763910000}]}
+//      ];
+
+// var chart = d3.timeline();
+//
+// var svg =d3.select("#timeline1").append("svg").attr("width", 500).datum(testData).call(chart);
+
+
+//THIS MATERIAL IS FOR USING CHART.JS
+var taskMaintain = [];
+var taskExercise = [];
+var taskEating = [];
+var barLabels = [];
+
+for (i = 0; i < (parseInt(numCrew)); i++) {
+  barLabels[i] = "Crewmember " + (i+1);
+  taskMaintain[i] = (parseInt(duration)*(1/12)/(i+1));
+  taskExercise[i] = (parseInt(duration)*(1/6));
+  taskEating[i]=(parseInt(duration)*(1/12));
+}
+
+var barChartData ={
+  labels: barLabels,
+  datasets: [{
+      label: 'Maintenance',
+      data: taskMaintain,
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+    }, {
+      label: 'Exercise',
+      data: taskExercise,
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+    }, {
+      label: 'Eating',
+      data: taskEating,
+      backgroundColor: 'rgba(255, 206, 86, 0.2)',
+    }]
+  }
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: barChartData,
+    options: {
+      title: {
+        display: true,
+        text: "Crew Activity Breakdown"
+      },
+      tooltips: {
+        mode: 'index',
+        intersect: false
+      },
+      responsive: true,
+      scales: {
+        xAxes: [{
+          stacked: true,
+          ticks: {
+            beginAtZero: true,
+
+          },
+          title: {
+            display: true,
+            text: "Mission Elapsed Time (days)"
+          },
+          suggestedMin: 0,
+          suggestedMax: parseInt(duration)
+        }],
+        yAxes: [{
+          stacked: true
+              }]
+        }
+    }
+});
+
+} //Closes the Design My Spacecraft Button Function
+
+function testButton(form){
+  for (count = 0; count<3; count ++){
+    if (form.rad[Count].checked)
+    break;
+  }
+  alert("Button " + count+ " is selected");
+}
+
+function readText(form) {
+  TestVar=form.inputbox1.value;
+  alert("Your spacecraft is named: " + TestVar);
+}
+
+// // function writeText(form){
+// //   form.inputbox.value ="You're a butt!"
+// }
+
+
+</script>
+  </body>
+    </html>

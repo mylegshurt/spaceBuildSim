@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+
+body {
+  font-family: 'Roboto', sans-serif;
+  padding: 0px;
+  margin: 0px;
+  }
+
+.title {
+  text-align: center;
+  background-color: darkgrey;
+  color: white;
+  font-weight: bold;
+  font-stretch: extra-expanded;
+}
+
+
+.mainContainer {
+  padding: 20px;
+  border: 1px solid red;
+  min-width: 1080px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.containerForm {
+  padding: 20px;
+  border: 1px solid blue;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+  overflow-y: auto;
+  height: 800px;
+}
+
+/*Contains all of the output boxes*/
+.container2 {
+  display: flex;
+  border: 1px solid green;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/*Contains Spacecraft Summary, Mission Objectivies, Destination and Duration*/
+.container3 {
+  padding: 4px;
+  min-height: 20px;
+  border: 1px solid pink;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/*Contains Spacecraft Layout and Crewmember Status Box*/
+.container4 {
+  padding: 20px;
+  min-height: 100px;
+  border: 1px solid purple;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+/*Contains Mission Timeline Box*/
+.container5{
+  padding: 20px;
+  display: flex;
+  border: 1px solid orange;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+
+.icon:hover {
+  box-shadow: 0 0 11px rgba(33,33,33,.2);
+}
+
+#crewBox {
+  height: 300px;
+  width: 300px;
+  border: 1px solid pink;
+}
+
+#titleBox {
+  height:100px;
+  width: 200px;
+  border: 1px solid pink;
+}
+
+.summaryInfo {
+  font-size: 10px;
+  line-height: normal;
+  align-items: center;
+}
+
+#objectivesBox {
+  height:100px;
+  width: 200px;
+  border: 1px solid pink;
+}
+
+#destinationBox {
+  height:100px;
+  width: 200px;
+  border: 1px solid pink;
+}
+
+#durationBox {
+  height:100px;
+  width: 200px;
+  border: 1px solid pink;
+}
+
+#spacecraftImage {
+  height: auto;
+  max-width: 100px;
+  border: 1px solid black;
+}
+
+#missionBuild {
+  height: 200px;
+  width: 200px;
+  border-radius: 125px;
+  background-size:contain;
+  background-image: url("habitat.jpg");
+background-repeat:no-repeat;
+background-position:center;
+}
+
+#tutorialBuild {
+height: 200px;
+width: 200px;
+border-radius: 125px;
+background-size:contain;
+background-image: url("habitat.jpg");
+background-repeat:no-repeat;
+background-position:center;
+}
